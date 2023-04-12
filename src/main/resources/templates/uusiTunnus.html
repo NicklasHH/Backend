@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<link type="text/css" rel="stylesheet" href="/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" />
+<link rel="stylesheet">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Uusi tunnus</title>
+</head>
+<style>
+.form-control:focus {
+	-webkit-box-shadow: none;
+	box-shadow: none;
+}
+.hidden {
+        display: none;
+      }
+</style>
+
+<body class="bg-dark mx-auto text-warning border border-warning rounded m-4" style="width: 350px;">
+
+	<h1 class="text-warning text-center mt-4">Luo uusi tunnus</h1>
+	<div class="text-white container d-flex align-items-center justify-content-center">
+
+		<form th:object="${uusiTunnus}" th:action="@{/tallennaTunnus}" action="#" method="post" class="mt-4 text-center" >
+		
+			<div style="width: 250px" class="form-floating mt-2 text-center">
+				<input th:field="*{tunnus}"
+					type="text" 
+					autocomplete="off"
+					class="border-secondary text-white bg-dark form-control"
+					placeholder=" "
+					>
+					<label>Käyttäjätunnus:</label>
+					<div th:if="${#fields.hasErrors('tunnus')}" th:errors="*{tunnus}" class="text-danger">Error</div>
+			</div>
+
+			<div style="width: 250px" class="form-floating mt-2">
+				<input type="password" 
+					autocomplete="new-password"
+					class="border-secondary text-white bg-dark form-control"
+					placeholder=" " 
+					th:field="*{salasana}" 
+					>
+					<label>Salasana:</label>
+					<div th:if="${#fields.hasErrors('salasana')}" th:errors="*{salasana}" class="text-danger">Error</div>
+			</div>
+
+			<div class="form-floating mt-2" style="width: 250px">
+				<select class="border-secondary text-white bg-dark form-select" th:field="*{rooli}" required>
+					<option value="USER">USER</option>
+					<option value="ADMIN">ADMIN</option>
+				</select>
+				<label for="role">Rooli:</label>
+			</div>
+
+			<input class="btn btn-sm btn-outline-success mt-4 mb-4" type="submit" value="Luo tunnus"></input> 
+				<a class="btn btn-sm btn-outline-danger mt-4 mb-4" href="/">Palaa etusivulle</a>
+		</form>
+	</div>
+</body>
+</html>

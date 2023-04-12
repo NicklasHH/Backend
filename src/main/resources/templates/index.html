@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+<link type="text/css" rel="stylesheet" href="/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" />
+<meta charset="UTF-8">
+<title>Etusivu</title>
+</head>
+<body class="bg-dark text-warning">
+
+	<!-------- Kirjautumatta näkyvä etusivu -------->
+	<div sec:authorize="!isAuthenticated()" class="text-center mt-4">
+		<a>Tervetuloa! Kirjaudu sisään jatkaaksesi ruokapäiväkirjaan tai unenseurantaan</a> <br />
+			<a class="btn btn-sm btn-outline-success mt-2" href="/login"> Kirjaudu sisään</a>
+	</div>
+
+
+	<!-------- Kirjautuneelle näkyvä etusivu -------->
+	<div sec:authorize="hasAnyAuthority('ADMIN', 'USER')" class="d-flex justify-content-between bg-secondary bg-opacity-25">
+
+		<!-- kirjautuneena on: -->
+		<span class="m-2"> <a>Kirjautuneena: </a> 
+			<a class="text-white text-decoration-none">[[${#httpServletRequest.remoteUser}]]</a>
+
+			<span class="d-block"> <a>Roolilla: </a> 
+				<a sec:authorize="hasAnyAuthority('ADMIN')" class="text-white text-decoration-none">Admin</a>
+				<a sec:authorize="hasAnyAuthority('USER')" class="text-white text-decoration-none">User</a>
+			</span>
+		</span>
+
+		<!-- Kirjaudu ulos -->
+		<form class="mt-3 m-2" th:action="@{/logout}" method="post">
+			<input class="btn btn-sm btn-outline-danger" type="submit" value="Kirjaudu ulos" />
+		</form>
+	</div>
+
+
+	<!-- Valikko -->
+	<div class="m-4" sec:authorize="hasAnyAuthority('ADMIN', 'USER')">
+		<div class="d-flex justify-content-center">
+			<a class="btn btn-warning align-self-start disabled" href="/">Etusivu</a>
+			<a class="btn btn-outline-warning align-self-start mx-1" href="ruoka">Ruokapäiväkirja</a>
+			<a class="btn btn-outline-warning align-self-start" href="uni">Unenseuranta</a>
+		</div>
+	</div>
+
+	<!-- Tekstiä sisäänkirjautuneille -->
+	<div sec:authorize="hasAnyAuthority('ADMIN', 'USER')"
+		class="text-center m-4">
+		<button type="button" class="btn btn-dark bg-transparent border-0" onclick="location.reload()">
+			<img class="rounded" th:src="@{https://picsum.photos/350/525}">
+		</button>
+		<div class="text-white">
+			<a> paina kuvaa vaihtaaksesi sitä</a>
+		</div>
+	</div>
+
+
+	<!-- Rest api nappulat adminille sekä uuden käyttäjätunnuksen luominen -->
+
+	<div sec:authorize="hasAnyAuthority('ADMIN', 'USER')"
+		class="text-center container m-4 position-absolute bottom-0 end-0 border border-secondary rounded-1"
+			style="width: fit-content">
+		<a sec:authorize="hasAnyAuthority('ADMIN')" class="btn btn-sm btn-outline-info m-4 " href="/uusiTunnus">Luo uusi tunnus</a>
+		<div class="text-danger m-2">Rest</div>
+		<div>
+			<a class="btn btn-sm btn-outline-secondary mb-2" target="_blank" href="/restRuoat"> Ruoat</a>
+			<a class="btn btn-sm btn-outline-secondary mb-2" target="_blank" href="/restUnet"> Unet</a>
+			<a class="btn btn-sm btn-outline-secondary mb-2" target="_blank" href="/restUnenlaadut">Unenlaadut</a>
+			<a sec:authorize="hasAnyAuthority('ADMIN')" class="btn btn-sm btn-outline-secondary mb-2" target="_blank" href="/restUserit">Käyttäjät</a>
+		</div>
+	</div>
+
+</body>
+</html>

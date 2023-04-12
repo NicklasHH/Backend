@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+<link type="text/css" rel="stylesheet" href="/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" />
+<link type="text/css" rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css" th:href="@{https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css}" />
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js" th:src="@{https://code.jquery.com/jquery-3.5.1.min.js}"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js" th:src="@{https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js}"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<title>Ruokapäiväkirja</title>
+</head>
+<style> 
+.form-control:focus {/* hehku pois formista */
+	-webkit-box-shadow: none;
+	box-shadow: none;
+}
+.form-control::placeholder {
+	color: grey;
+}
+.hover tbody tr:hover td {
+	color: #ffc107;
+}
+</style>
+
+<body class="bg-dark">
+
+	<!-------- yläreuna -------->
+	<div class="d-flex justify-content-between bg-secondary bg-opacity-25">
+
+		<!-- kirjautuneena on: -->
+		<span class="m-2"> <a class="text-warning text-decoration-none">Kirjautuneena: </a> 
+			<a class="text-white text-decoration-none">[[${#httpServletRequest.remoteUser}]]</a>
+
+			<span class="d-block"> <a class="text-warning text-decoration-none">Roolilla: </a> 
+				<a sec:authorize="hasAnyAuthority('ADMIN')" class="text-white text-decoration-none">Admin</a>
+				<a sec:authorize="hasAnyAuthority('USER')" class="text-white text-decoration-none">User</a>
+			</span>
+		</span>
+
+		<!-- Kirjaudu ulos -->
+		<form class="mt-3 m-2" th:action="@{/logout}" method="post">
+			<input class="btn btn-sm btn-outline-danger" type="submit" value="Kirjaudu ulos" />
+		</form>
+	</div>
+
+	<!-- Valikko -->
+	<div class="m-4">
+		<div class="d-flex justify-content-center m-4">
+			<a class="btn btn-outline-warning align-self-start" href="/">Etusivu</a>
+
+			<div class="btn-group-vertical mx-1">
+				<a class="btn btn-warning disabled" href="ruoka">Ruokapäiväkirja</a>
+				<a class="btn btn-outline-success btn-sm rounded-bottom border-top-0 mb-2" href="uusiRuoka">Lisää ruoka</a> <br />
+			</div>
+
+			<a class="btn btn-outline-warning align-self-start" href="uni">Unenseuranta</a>
+		</div>
+
+
+
+		<!--  HAKU -->
+		<div class="d-flex justify-content-center placeholder-glow">
+			<form th:action="@{/ruoka}" class="row align-items-center "
+				autocomplete="off">
+				<div class="col-auto">
+					<input type="text" name="haku" id="haku" placeholder="Hae listalta" th:value="${haku}"
+						class="border-secondary text-white form-control bg-secondary bg-opacity-10" required />
+				</div>
+				<div class="col-auto">
+					<input class="btn btn-sm btn-outline-info" type="submit" value="Hae" /> 
+					<input class="btn btn-sm btn-outline-danger" type="button" value="Tyhjennä" onclick="clearSearch()" />
+				</div>
+			</form>
+		</div>
+		
+		<script>
+			function clearSearch() {
+				window.location = "[[@{/ruoka}]]";
+			}
+		</script>
+
+
+		<!-- Lajittelu -->
+		<script>
+			$(document).ready(function() {
+				$('#myTable').DataTable({
+					"order" : [ 2, 'desc' ],
+					"bLengthChange" : false,
+					"searching" : false,//poista haku
+					"info" : false,// poista tulosten määrä
+					"paginate" : false,// poista sivunumero
+					"columnDefs" : [ {// poista järjestely muokkaa ja poista osiosta
+						"orderable" : false,
+						"targets" : [ 4 ],
+					}, ],
+					"pageLength" : -1,//näytä kaikki
+					"autoWidth" : true,
+				});
+			});
+		</script>
+
+		<!-- Taulu -->
+		<table
+			class="table table-sm hover table-striped table-dark text-center compact m-2"
+			id="myTable">
+			<thead>
+				<tr>
+					<th class="border border-white border-opacity-25">Ruoka</th>
+					<th class="border border-white border-opacity-25">Lisätietoja</th>
+					<th class="border border-white border-opacity-25">Päivämäärä</th>
+					<th class="border border-white border-opacity-25">Aika</th>
+					<th class="border border-white border-opacity-25">Hallinta</th>
+				</tr>
+			</thead>
+			
+			<!-- Taulun sisältö -->
+			<tbody>
+				<tr th:each="ruoat : ${ruoat}">
+					<td th:text="${ruoat.nimi}"></td>
+					<td th:text="${ruoat.lisatietoja}"></td>
+					<td th:text="${ruoat.pvm}"></td>
+					<td th:text="${ruoat.kellonaika}"></td>
+					<!-- Admin -->
+					<td><a sec:authorize="hasAnyAuthority('ADMIN')" class="btn btn-sm btn-outline-info"
+						th:href="@{/muokkaaRuoka/{id}(id=${ruoat.id})}">Muokkaa</a>
+						<a sec:authorize="hasAnyAuthority('ADMIN')" class="btn btn-sm btn-outline-danger"
+						th:href="@{/poistaRuoka/{id}(id=${ruoat.id})}">Poista</a>
+					
+					<!-- user -->
+					<a sec:authorize="hasAnyAuthority('USER')" class="btn btn-sm btn-outline-info disabled"
+						th:href="@{/muokkaaRuoka/{id}(id=${ruoat.id})}">Muokkaa</a>
+						<a sec:authorize="hasAnyAuthority('USER')" class="btn btn-sm btn-outline-danger disabled"
+						th:href="@{/poistaRuoka/{id}(id=${ruoat.id})}">Poista</a>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</body>
+</html>

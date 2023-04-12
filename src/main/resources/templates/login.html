@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+<link type="text/css" rel="stylesheet" href="/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" />
+<meta charset="UTF-8">
+<title>Sisäänkirjaus</title>
+</head>
+<style>
+.form-control:focus {
+	-webkit-box-shadow: none;
+	box-shadow: none;
+}
+</style>
+<body class="bg-dark mx-auto text-warning border border-warning rounded m-4" style="width: 350px;">
+
+	<h1 class="text-warning text-center mt-4">Kirjaudu sisään</h1>
+	<div class="text-white container d-flex align-items-center justify-content-center">
+
+		<form class="mt-4 text-center" th:action="@{/login}" method="post">
+
+			<div style="width: 250px" class="form-floating mt-2 text-center">
+				<input type="text" 
+					autocomplete="off"
+					class="border-secondary bg-dark text-white form-control"
+					placeholder=" " 
+					name="username"
+					/> 
+				<label>Käyttäjätunnus</label>
+			</div>
+
+			<div style="width: 250px" class="form-floating mt-2">
+				<input type="password"
+					autocomplete="off"
+					class="border-secondary bg-dark text-white form-control"
+					placeholder=" "
+					name="password"
+					readonly onfocus="this.removeAttribute('readonly');" 
+					/> <!-- Poistaa automaattisen täytön -->
+				<label>Salasana</label>
+			</div>
+			<div class="text-danger text-center mt-1" th:if="${param.error}">Väärä käyttäjätunnus tai salasana.</div>
+
+			<input class="btn btn-sm btn-outline-success mt-4 mb-4" type="submit" value="Kirjaudu sisään" />
+
+		</form>
+	</div>
+</body>
+</html>

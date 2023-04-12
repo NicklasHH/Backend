@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<link type="text/css" rel="stylesheet" href="/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" />
+<link rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Uuden ruoan lisäys</title>
+</head>
+<style>
+.form-control:focus { /* hehku pois formista ja darkmode kalenteriin/kelloon */
+	-webkit-box-shadow: none;
+	box-shadow: none;
+}
+input {
+	color-scheme: dark;
+}
+</style>
+
+<body class="bg-dark mx-auto m-5 p-4 border border-warning rounded"
+	style="width: 400px">
+
+	<h1 class="text-warning text-center">Lisää uusi ruoka</h1>
+
+	<div class="text-white ">
+		<form th:object="${lisaaRuoka}" th:action="@{/tallennaRuoka}" action="#" method="post">
+		
+			<div class="form-floating mt-2">
+				<input type="text"
+					autocomplete="off"
+					class="border-secondary text-white bg-dark form-control"
+					placeholder=" "
+					th:field="*{nimi}" 
+					/>
+					<label>Ruoan nimi:</label>
+					<div th:if="${#fields.hasErrors('nimi')}" th:errors="*{nimi}" class="text-danger">Error</div>
+			</div>
+
+			<div class="form-floating mt-2">
+				<input type="text" 
+					autocomplete="off"
+					class="border-secondary text-white bg-dark form-control"
+					placeholder=" "
+					th:field="*{lisatietoja}" 
+					/>
+					<label>Lisätietoja:</label>
+			</div>
+
+
+			<div class="form-floating mt-2">
+				<input type="date"
+					class="border-secondary text-white bg-dark form-control"
+					id="tanaan"
+					th:field="*{pvm}" 
+					/>
+					<label>Päivämäärä:</label>
+			</div>
+			
+			<!-- Tämä päivä -->
+			<script>
+				var pvmNyt = new Date().toISOString().substr(0, 10);
+				document.getElementById("tanaan").value = pvmNyt;
+			</script>
+			
+			<div class="form-floating mt-2">
+				<input type="time"
+					class="border-secondary text-white bg-dark form-control"
+					id="aika-nyt"
+					th:field="*{kellonaika}" 
+					/>
+					<label>Kellonaika:</label> <br>
+			</div>
+			
+			<!-- Kellonaika -->
+			<script>
+				var aikaNyt = new Date();
+				var tunnit = aikaNyt.getHours();
+				var minuutit = aikaNyt.getMinutes();
+
+				// Ajan formatointi HH:MM
+				var aikaStr = tunnit.toString().padStart(2, '0') + ':' + minuutit.toString().padStart(2, '0');
+
+				document.getElementById("aika-nyt").value = aikaStr;
+			</script>
+
+
+			<!-- Nappulat -->
+			<div class="text-center">
+				<input class="btn btn-sm btn-outline-success" type="submit" value="Lisää"></input>
+				<a class="btn btn-sm btn-outline-danger " href="/ruoka">Peruuta</a>
+			</div>
+		</form>
+	</div>
+
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<link type="text/css" rel="stylesheet" href="/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" />
+<link rel="stylesheet">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Muokkaa ruokaa</title>
+</head>
+<style>
+.form-control:focus {/* darkmode kalenteriin ja kelloon */
+	-webkit-box-shadow: none;
+	box-shadow: none;
+}
+input {
+	color-scheme: dark;
+}
+</style>
+
+<body class="bg-dark mx-auto m-5 p-4 border border-warning rounded"
+	style="width: 400px">
+
+	<h1 class="text-warning text-center">Muokkaa ruokaa</h1>
+
+	<div class="text-white ">
+		<form th:object="${muokkaaRuoka}" th:action="@{/tallennaRuoka}" action="#" method="post">
+			<input type="hidden" id="id" th:field="*{id}" />
+
+			<div class="form-floating mt-2">
+				<input type="text"
+					autocomplete="off"
+					class="border-secondary text-white bg-dark form-control"
+					th:field="*{nimi}"
+					/>
+					<label>Ruoan nimi:</label>
+			</div>
+
+
+			<div class="form-floating mt-2">
+				<input type="text" 
+					autocomplete="off"
+					class="border-secondary text-white bg-dark form-control"
+					th:field="*{lisatietoja}"
+					/>
+					<label>Lisätietoja:</label>
+			</div>
+
+
+			<div class="form-floating mt-2">
+				<input type="date"
+					class="border-secondary text-white bg-dark form-control"
+					th:field="*{pvm}"
+					/>
+					<label>Päivämäärä:</label>
+			</div>
+			
+
+			<div class="form-floating mt-2">
+				<input type="time"
+					class="border-secondary text-white bg-dark form-control"
+					th:field="*{kellonaika}"
+					/>
+					<label>Kellonaika:</label> <br>
+			</div>
+			
+
+			<!-- Nappulat -->
+			<div class="text-center">
+				<input class="btn btn-sm btn-outline-success" type="submit" value="Muokkaa"></input>
+					<a class="btn btn-sm btn-outline-danger " href="/ruoka">Peruuta</a>
+			</div>
+		</form>
+	</div>
+
+
+</body>
+</html>

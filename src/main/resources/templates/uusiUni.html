@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<link type="text/css" rel="stylesheet" href="/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" />
+<link rel="stylesheet">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Uuden unen lisäys</title>
+</head>
+<style>
+.form-control:focus {
+	-webkit-box-shadow: none;
+	box-shadow: none;
+}
+input {
+	color-scheme: dark;
+} /* darkmode kalenteriin */
+</style>
+
+<body class="bg-dark mx-auto m-5 p-4 border border-warning rounded" style="width: 400px">
+
+	<h1 class="text-warning text-center">Lisää uusi uni</h1>
+
+	<div class="text-white ">
+		<form th:object="${lisaaUni}" th:action="@{/tallennaUni}" action="#" method="post">
+
+			<div class="form-floating mt-2">
+				<input type="time"
+					autocomplete="off"
+					class="border-secondary text-white bg-dark form-control"
+					placeholder=" "
+					th:field="*{maara}" 
+					required
+					/>
+					<label>Unen määrä:</label>
+					<div th:if="${#fields.hasErrors('maara')}" th:errors="*{maara}" class="text-danger">Error</div>
+			</div>
+
+
+			<div class="form-floating mt-2">
+				<select id="unenlaadut" th:field="*{unenlaatu}"
+					class="text-white bg-dark form-control">
+					<option th:each="unenlaatu: ${unenlaadut}"
+						th:value="${unenlaatu.id}"
+						th:text="${#strings.repeat('&#9733;', unenlaatu.laatu)}">
+					</option>
+				</select>
+				<label>Laatu</label>
+			</div>
+
+
+			<div class="form-floating mt-2">
+				<input type="text"
+					autocomplete="off"
+					class="border-secondary text-white bg-dark form-control"
+					placeholder=" "
+					th:field="*{lisatietoja}" 
+					/>
+					<label>Lisätietoja:</label>
+			</div>
+
+
+				<div class="form-floating mt-2">
+					<input type="date"
+						class="border-secondary text-white bg-dark form-control"
+						id="tanaan"
+						th:field="*{pvm}" 
+						/>
+						<label>Päivämäärä:</label>
+						</div>
+						<br>
+
+				<script> var pvmNyt = new Date().toISOString().substr(0, 10); document.getElementById("tanaan").value = pvmNyt; </script> <!-- Tämä päivä -->
+			
+			<!-- Nappulat -->
+			<div class="text-center">
+				<input class="btn btn-sm btn-outline-success" type="submit" value="Lisää"></input>
+				<a class="btn btn-sm btn-outline-danger " href="/uni">Peruuta</a>
+			</div>
+		</form>
+	</div>
+
+</body>
+</html>

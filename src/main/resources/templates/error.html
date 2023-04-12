@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+  <link rel="stylesheet" href="/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" />
+  <meta charset="UTF-8">
+  <title>Virhe</title>
+</head>
+<body class="bg-dark text-white m-4 d-flex flex-column align-items-center">
+
+  <div class="border rounded mt-4">
+    <div class="container mt-3">
+      <p>Virheilmoitus: 
+      	<span class="text-danger" th:text="${virheViesti != null ? virheViesti : 'Sivua ei löydy!'}"></span>
+      </p>
+    </div>
+  </div>
+
+  <a class="btn btn-outline-success mt-2" href="/">Palaa etusivulle</a>
+
+</body>
+</html>
